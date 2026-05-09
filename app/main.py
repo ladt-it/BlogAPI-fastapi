@@ -1,10 +1,12 @@
 from fastapi import FastAPI, Depends
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
-
 from app.database import get_db
+from app.routers import auth
 
 app = FastAPI(title="Blog API")
+
+app.include_router(auth.router)
 
 
 @app.get("/")
