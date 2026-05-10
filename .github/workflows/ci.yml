@@ -38,17 +38,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Wait for PostgreSQL
-        run: |
-          until pg_isready -h postgres -U postgres -d blog_db_test; do
-            echo "Waiting for PostgreSQL..."
-            sleep 2
-          done
-
       - name: Run tests
         env:
-          DATABASE_URL: postgresql+psycopg://postgres:postgres@postgres:5432/blog_db_test
+          DATABASE_URL: postgresql+psycopg://postgres:postgres@localhost:5432/blog_db_test
           SECRET_KEY: test-secret-key-for-ci
-          TEST_DATABASE_URL: postgresql+psycopg://postgres:postgres@postgres:5432/blog_db_test
+          TEST_DATABASE_URL: postgresql+psycopg://postgres:postgres@localhost:5432/blog_db_test
         run: |
           pytest tests/ -v --cov=app --cov-report=term-missing
