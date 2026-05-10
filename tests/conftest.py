@@ -7,8 +7,12 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, Asyn
 from app.database import get_db
 from app.models.base import Base
 from app.main import app
+import os
 
-TEST_DATABASE_URL = "postgresql+psycopg://postgres:postgres@localhost:5432/blog_db_test"
+TEST_DATABASE_URL = os.getenv(
+    "TEST_DATABASE_URL",
+    "postgresql+psycopg://postgres:postgres@localhost:5432/blog_db_test"
+)
 
 engine = create_async_engine(TEST_DATABASE_URL, echo=False)
 TestSessionLocal = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
