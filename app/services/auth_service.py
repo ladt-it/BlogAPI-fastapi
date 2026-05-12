@@ -3,6 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.repositories.user_repo import UserRepository
 from app.core.security import hash_password, verify_password
 from app.core.jwt import create_access_token, create_refresh_token, decode_token
+from app.tasks.celery_tasks import send_welcome_email_task
 
 
 class AuthService:
@@ -23,6 +24,7 @@ class AuthService:
             username=username,
             hashed_password=hashed_password,
         )
+        send_welcome_email_task.delay(email=email, username=username)
 
         access_token = create_access_token(data={"sub": str(user.id)})
         refresh_token = create_refresh_token(data={"sub": str(user.id)})
